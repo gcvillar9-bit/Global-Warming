@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <title>Planet Patrol · COOL IT!</title>
+  <meta name="description" content="Slice CO₂, flip smokestacks into wind turbines, and keep the planet under +1.5 °C until 2050." />
+  <meta name="theme-color" content="#070b1f" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/play.css" />
+</head>
+<body class="play">
+  <canvas id="game" aria-label="Planet Patrol game. Tap or swipe to slice CO2 molecules and convert polluters."></canvas>
+
+  <!-- HUD -->
+  <div id="hud" class="hud hidden">
+    <div class="hud-left">
+      <a href="index.html" class="icon-btn" title="Back to menu" aria-label="Back to menu">🏠</a>
+    </div>
+    <div class="hud-center">
+      <div class="year-row">
+        <span id="hud-year" class="year">2025</span>
+        <span id="hud-chapter" class="chapter">Chapter 1</span>
+      </div>
+      <div class="progress"><div id="hud-progress" class="progress-fill"></div>
+        <i style="left:20%"></i><i style="left:40%"></i><i style="left:60%"></i><i style="left:80%"></i>
+      </div>
+    </div>
+    <div class="hud-right">
+      <button id="btn-mute" class="icon-btn" title="Sound (M)" aria-label="Toggle sound">🔊</button>
+      <button id="btn-pause" class="icon-btn" title="Pause (P)" aria-label="Pause">⏸</button>
+    </div>
+  </div>
+
+  <div id="score-box" class="score-box hidden">
+    <div class="score-label">Cool points</div>
+    <div id="hud-score" class="score">0</div>
+    <div id="hud-combo" class="combo">×1</div>
+  </div>
+
+  <div id="thermo" class="thermo hidden" aria-label="Global temperature">
+    <div class="thermo-read"><span id="hud-temp">+1.35</span><small>°C</small></div>
+    <div class="thermo-tube">
+      <div id="thermo-fill" class="thermo-fill"></div>
+      <div class="thermo-mark m15"><span>1.5°</span></div>
+      <div class="thermo-mark m20"><span>2.0°</span></div>
+    </div>
+    <div class="thermo-bulb"></div>
+    <div class="ppm"><span id="hud-ppm">427</span> ppm</div>
+  </div>
+
+  <div id="vignette" class="vignette"></div>
+  <div id="banner" class="banner" aria-live="polite"></div>
+
+  <!-- Title screen -->
+  <section id="screen-title" class="overlay show">
+    <div class="title-card">
+      <div class="kicker">COOL IT! presents</div>
+      <h1 class="game-title">Planet <span>Patrol</span></h1>
+      <p class="lead">It's 2025. Earth has a fever of <b>+1.35&nbsp;°C</b>. You have until <b>2050</b>. Keep it under <b class="mint">+1.5&nbsp;°C</b>.</p>
+      <div class="howto">
+        <div class="how"><div class="how-ico">👆</div><b>Swipe CO₂</b><span>Slice molecules out of the sky</span></div>
+        <div class="how"><div class="how-ico">🏭→🌬️</div><b>Flip polluters</b><span>Tap smokestacks, oil pumps &amp; gas cars to go clean</span></div>
+        <div class="how"><div class="how-ico">🚧</div><b>Deny permits</b><span>Tap construction before it's built</span></div>
+        <div class="how"><div class="how-ico">🔥</div><b>Stop wildfires</b><span>Heat makes fires — save the trees</span></div>
+      </div>
+      <button id="btn-start" class="btn big">Start the mission ▶</button>
+      <div id="best-line" class="best-line"></div>
+    </div>
+  </section>
+
+  <!-- Upgrade picker -->
+  <section id="screen-upgrade" class="overlay">
+    <div class="upgrade-wrap">
+      <div class="kicker" id="up-kicker">2030 · Policy window open</div>
+      <h2 class="up-title">Pick a real-world solution</h2>
+      <p class="up-sub">Each one is a real thing humanity is already doing. Choose wisely.</p>
+      <div id="cards" class="cards"></div>
+    </div>
+  </section>
+
+  <!-- Pause -->
+  <section id="screen-pause" class="overlay">
+    <div class="title-card small">
+      <h2>Paused</h2>
+      <p class="lead">The planet will wait. (The real one won't.)</p>
+      <div id="pause-upgrades" class="pause-upgrades"></div>
+      <div class="row">
+        <button id="btn-resume" class="btn">Resume</button>
+        <a href="index.html" class="btn ghost">Menu</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <section id="screen-over" class="overlay">
+    <div class="title-card results">
+      <div class="kicker" id="over-kicker">2050</div>
+      <h2 id="over-title" class="over-title">You made it!</h2>
+      <div id="stars" class="stars"><span>★</span><span>★</span><span>★</span></div>
+      <div class="final-temp"><span id="over-temp">+1.42</span><small>°C</small></div>
+      <p id="over-msg" class="lead"></p>
+      <div id="over-stats" class="stats"></div>
+      <div class="realworld">
+        <b>🌎 Reality check</b>
+        <p>In the real world, today's policies point to roughly <b>+2.6 to +3.1&nbsp;°C</b> by 2100 (UNEP Emissions Gap Report 2024). Every move you made in this game has a real-world twin — and every tenth of a degree avoided means fewer heatwaves, fires and floods.</p>
+      </div>
+      <div class="row">
+        <button id="btn-again" class="btn">Play again ↻</button>
+        <button id="btn-share" class="btn ghost">Share score</button>
+      </div>
+      <div class="row small-links">
+        <a href="quiz.html">🧠 Fact or Myth?</a>
+        <a href="stripes.html">🎼 Hear the warming</a>
+        <a href="act.html">💚 Real-life cool moves</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/audio.js"></script>
+  <script src="js/fx.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
