@@ -287,7 +287,7 @@
   $("btn-next").addEventListener("click", next);
   $("btn-again").addEventListener("click", () => { Sfx.click(); newRound(); });
   window.addEventListener("keydown", (e) => {
-    if ($("final").classList.contains("show")) return;
+    if ($("final").classList.contains("show") || e.repeat) return;
     if (e.key === "ArrowRight" && !answered) $("btn-fact").click();
     else if (e.key === "ArrowLeft" && !answered) $("btn-myth").click();
     else if ((e.key === "Enter" || e.key === " " || e.key === "ArrowRight") && answered) { e.preventDefault(); next(); }

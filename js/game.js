@@ -169,6 +169,7 @@
   /* ------------------------------------------------------------------ */
   let W = 0, H = 0, DPR = 1, CX = 0, CY = 0, R = 100, ITEM = 24, MOL_R = 10, BAND_MIN = 0, BAND_MAX = 0;
   function resize() {
+    const oldR = R, oldH = H;
     DPR = Math.min(window.devicePixelRatio || 1, 2);
     W = innerWidth;
     H = innerHeight;
@@ -184,6 +185,18 @@
     MOL_R = Math.max(8, R * 0.052);
     BAND_MIN = R + ITEM * 1.7;
     BAND_MAX = Math.max(BAND_MIN + 30, Math.min(W / 2 - 18, CY - 70, H - CY - 18, R * 2.1));
+    // Keep the existing sky reachable when the window changes shape.
+    if (S && oldR) {
+      const k = R / oldR;
+      for (const m of S.mols) {
+        m.dist = clamp(m.dist * k, R, BAND_MAX);
+        m.target = clamp(m.target * k, BAND_MIN, BAND_MAX);
+      }
+      for (const p of S.pups) {
+        p.y0 = clamp(oldH ? (p.y0 / oldH) * H : p.y0, H * 0.2, H * 0.85);
+        p.r = Math.max(24, R * 0.14);
+      }
+    }
     stars = makeStars();
   }
 
@@ -438,7 +451,8 @@
       molPos(m);
       if (Math.hypot(m.x - x, m.y - y) < radius) {
         const mm = m;
-        later(0.05 * ++k, () => captureMolecule(mm, k > 3));
+        const kk = ++k;
+        later(0.05 * kk, () => captureMolecule(mm, kk > 3));
       }
     }
   }
@@ -513,7 +527,8 @@
     let k = 0;
     S.slots.forEach((sl, i) => {
       if (sl.type === null) {
-        later(0.07 * ++k, () => {
+        const kk = ++k;
+        later(0.07 * kk, () => {
           if (sl.type !== null) return;
           sl.type = "tree";
           sl.grow = 0;
@@ -521,7 +536,7 @@
           sl.absorbT = Math.random() * 6;
           const c = slotCenter(i, 0.2);
           burst(c.x, c.y, 8, { color: ["#3ef2a0", "#22c55e", "#b4ffdc"], speed: 120, size: 4, life: 0.6, shape: "leaf" });
-          Sfx.pop(Math.min(k, 18));
+          Sfx.pop(Math.min(kk, 18));
         });
       }
     });
@@ -539,7 +554,6 @@
   /* ------------------------------------------------------------------ */
   const trail = [];
   let pointerDown = false;
-  let last = null;
   let lookX = 0, lookY = 0;
 
   function sliceSegment(x0, y0, x1, y1) {
@@ -587,34 +601,45 @@
     if (swipeHits >= 5) S.shake = Math.max(S.shake, 4);
   }
 
+  // Each finger slices on its own, so two-thumb play works on phones.
+  const pointers = new Map();
   function onDown(e) {
     Sfx.unlock();
     if (!S || S.phase !== "playing") return;
-    swipeHits = 0;
-    swipeBest = 0;
-    multiFloat = null;
+    if (!pointers.size) {
+      swipeHits = 0;
+      swipeBest = 0;
+      multiFloat = null;
+      trail.length = 0;
+    }
     pointerDown = true;
     const x = e.clientX, y = e.clientY;
-    last = { x, y };
-    trail.length = 0;
-    trail.push({ x, y, t: performance.now() });
+    pointers.set(e.pointerId, { x, y });
+    trail.push({ x, y, t: performance.now(), id: e.pointerId });
     sliceSegment(x, y, x, y);
     try { cv.setPointerCapture(e.pointerId); } catch (err) {}
   }
   function onMove(e) {
     lookX = e.clientX;
     lookY = e.clientY;
-    if (!pointerDown || !S || S.phase !== "playing") return;
+    const prevPt = pointers.get(e.pointerId);
+    if (!prevPt || !S || S.phase !== "playing") return;
     const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+    let lastPt = prevPt;
     for (const ev of evs.length ? evs : [e]) {
       const x = ev.clientX, y = ev.clientY;
-      if (last) sliceSegment(last.x, last.y, x, y);
-      last = { x, y };
-      trail.push({ x, y, t: performance.now() });
+      sliceSegment(lastPt.x, lastPt.y, x, y);
+      lastPt = { x, y };
+      trail.push({ x, y, t: performance.now(), id: e.pointerId });
     }
-    if (trail.length > 40) trail.splice(0, trail.length - 40);
+    pointers.set(e.pointerId, lastPt);
+    if (trail.length > 80) trail.splice(0, trail.length - 80);
   }
-  function onUp() { pointerDown = false; last = null; }
+  function onUp(e) {
+    if (e && e.pointerId != null) pointers.delete(e.pointerId);
+    else pointers.clear();
+    pointerDown = pointers.size > 0;
+  }
 
   cv.addEventListener("pointerdown", onDown);
   cv.addEventListener("pointermove", onMove);
@@ -1677,6 +1702,7 @@
     for (let pass = 0; pass < 2; pass++) {
       for (let i = 1; i < trail.length; i++) {
         const a = trail[i - 1], b = trail[i];
+        if (a.id !== b.id) continue;
         const k = i / trail.length;
         ctx.strokeStyle = pass === 0 ? "rgba(62,242,160," + (0.35 * k).toFixed(3) + ")" : "rgba(235,255,248," + (0.95 * k).toFixed(3) + ")";
         ctx.lineWidth = pass === 0 ? 14 * k + 2 : 5 * k + 1;
@@ -1773,6 +1799,8 @@
 
   function startGame() {
     Sfx.unlock();
+    endTimers.forEach(clearTimeout);
+    endTimers = [];
     S = newState("playing");
     document.body.classList.remove("toasts-top");
     lastHud = {};
@@ -1788,6 +1816,7 @@
 
   function openUpgrade() {
     S.phase = "upgrade";
+    pointers.clear();
     pointerDown = false;
     Sfx.fanfare();
     const year = START_YEAR + S.chapter * 5;
@@ -1853,10 +1882,16 @@
     if (window.Music) Music.start();
   }
 
+  // Results-screen celebrations; cancelled if a new game starts first.
+  let endTimers = [];
+  function endLater(fn, ms) { endTimers.push(setTimeout(fn, ms)); }
+
   function endGame(won) {
     if (S.phase === "over") return;
     S.phase = "over";
+    pointers.clear();
     pointerDown = false;
+    S.queue.length = 0; // nothing may change the score after the results are drawn
     if (window.Music) Music.stop();
     const temp = S.temp;
     const stars = !won ? 0 : temp <= 1.5 ? 3 : temp <= 1.7 ? 2 : 1;
@@ -1910,22 +1945,22 @@
       if (temp <= 1.5) FX.award("paris");
       if (temp < T_START) FX.award("net_negative");
       for (let k = 0; k < stars; k++) {
-        setTimeout(() => {
+        endLater(() => {
           starEls[k].classList.add("on");
           Sfx.note(Sfx.pentaFreq(5 + k * 2, 392), 0.4, 0.2, "triangle");
           FX.buzz(20);
         }, 500 + k * 380);
       }
-      setTimeout(() => {
+      endLater(() => {
         if (stars >= 2) FX.confetti({ count: stars === 3 ? 220 : 120, power: 1.2 });
-        if (stars === 3) setTimeout(() => FX.confetti({ count: 80, emoji: "🌍" }), 300);
+        if (stars === 3) endLater(() => FX.confetti({ count: 80, emoji: "🌍" }), 300);
         Sfx.fanfare();
       }, 500 + stars * 380);
     } else {
       Sfx.lose();
       S.shake = 14;
     }
-    if (newBest) setTimeout(() => FX.toast("🏅", "New personal best!", S.score.toLocaleString() + " cool points"), 1600);
+    if (newBest) endLater(() => FX.toast("🏅", "New personal best!", S.score.toLocaleString() + " cool points"), 1600);
   }
 
   function shareScore() {
@@ -1953,8 +1988,8 @@
   $("btn-mute").addEventListener("click", () => { Sfx.unlock(); Sfx.toggleMute(); syncMute(); });
   $("btn-pause").addEventListener("click", () => { Sfx.click(); pause(); });
   $("btn-resume").addEventListener("click", () => { Sfx.click(); resume(); });
-  $("btn-start").addEventListener("click", () => startGame());
-  $("btn-again").addEventListener("click", () => startGame());
+  $("btn-start").addEventListener("click", (e) => { e.currentTarget.blur(); startGame(); });
+  $("btn-again").addEventListener("click", (e) => { e.currentTarget.blur(); startGame(); });
   $("btn-share").addEventListener("click", () => shareScore());
   window.addEventListener("keydown", (e) => {
     if (e.key === "p" || e.key === "P" || e.key === "Escape") { if (S.phase === "playing") pause(); else if (S.phase === "paused") resume(); }
@@ -2009,7 +2044,7 @@
       // paused / upgrade / over: keep the world breathing a little
       S.t += frameDt * 0.25;
       tickFace(frameDt);
-      if (S.phase === "picking" || S.phase === "over") {
+      if (S.phase === "picking") {
         if (S.queue.length) {
           const due = S.queue.filter((q) => q.at <= S.t);
           S.queue = S.queue.filter((q) => q.at > S.t);

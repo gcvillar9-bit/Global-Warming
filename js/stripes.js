@@ -139,6 +139,8 @@
   const STEP = 0.095; // seconds per year
   let t0 = 0, lastIdx = -1;
   function play() {
+    if (playing) return;
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
     Sfx.unlock();
     $("intro").classList.remove("show");
     $("outro").classList.remove("show");

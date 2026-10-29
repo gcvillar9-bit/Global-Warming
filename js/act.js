@@ -73,6 +73,7 @@
     el.classList.remove("pulse"); void el.offsetWidth; el.classList.add("pulse");
     FX.setStore(STORE, Array.from(picked));
     sync();
+    if ($("card-out").classList.contains("show")) refreshCard();
   }
 
   function total() {
@@ -204,12 +205,17 @@
     return s === text ? s : s.trim() + "…";
   }
 
+  function refreshCard() {
+    drawCard();
+    $("btn-dl").href = $("pcard").toDataURL("image/png");
+  }
+  $("pname").addEventListener("input", () => { if ($("card-out").classList.contains("show")) refreshCard(); });
+
   $("btn-make").addEventListener("click", () => {
     Sfx.unlock();
-    drawCard();
+    refreshCard();
     const out = $("card-out");
     out.classList.add("show");
-    $("btn-dl").href = $("pcard").toDataURL("image/png");
     Sfx.fanfare();
     FX.confetti({ count: 140, power: 1.1 });
     if (picked.size) FX.award("pledge");
