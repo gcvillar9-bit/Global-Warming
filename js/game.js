@@ -1968,17 +1968,16 @@
     const text = won
       ? "I kept the planet at +" + S.temp.toFixed(2) + " °C until 2050 in COOL IT! Planet Patrol 🌍❄️ (" + S.score.toLocaleString() + " pts). Can you beat 1.5 °C?"
       : "The planet hit a tipping point in " + Math.floor(S.year) + " on my watch in COOL IT! Planet Patrol 🔥 Can you make it to 2050 under 1.5 °C?";
-    const url = location.href.split("#")[0];
-    if (navigator.share) {
-      navigator.share({ title: "COOL IT! Planet Patrol", text, url }).catch(() => {});
-    } else if (navigator.clipboard) {
-      navigator.clipboard.writeText(text + " " + url).then(
+    const copy = () => {
+      if (!navigator.clipboard) { FX.toast("📋", "Share this:", text); return; }
+      navigator.clipboard.writeText(text).then(
         () => FX.toast("📋", "Copied to clipboard!", "Paste it anywhere to challenge a friend."),
-        () => FX.toast("📋", "Couldn't copy", text)
+        () => FX.toast("📋", "Share this:", text)
       );
-    } else {
-      FX.toast("📋", "Share this:", text);
-    }
+    };
+    // Some browsers and embedded viewers refuse the share sheet; fall back to copying.
+    if (navigator.share) navigator.share({ title: "COOL IT! Planet Patrol", text }).catch((err) => { if (!err || err.name !== "AbortError") copy(); });
+    else copy();
   }
 
   /* ------------------------------------------------------------------ */

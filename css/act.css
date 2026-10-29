@@ -99,7 +99,8 @@ body.act {
 .p-form input:focus { outline: none; border-color: var(--mint); }
 .card-out { display: none; margin-top: 20px; }
 .card-out.show { display: block; animation: pop-in 0.5s cubic-bezier(.2, 1.3, .4, 1) both; }
-#pcard { width: min(420px, 100%); height: auto; border-radius: 18px; box-shadow: var(--shadow); }
+.save-tip { color: var(--muted); font-size: 0.85rem; margin: 10px 0 0 !important; }
+#pcard-img { width: min(420px, 100%); height: auto; border-radius: 18px; box-shadow: var(--shadow); }
 .row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
 .a-foot { margin-top: 30px; }
 

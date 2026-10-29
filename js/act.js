@@ -207,7 +207,9 @@
 
   function refreshCard() {
     drawCard();
-    $("btn-dl").href = $("pcard").toDataURL("image/png");
+    const url = $("pcard").toDataURL("image/png");
+    $("btn-dl").href = url;
+    $("pcard-img").src = url;
   }
   $("pname").addEventListener("input", () => { if ($("card-out").classList.contains("show")) refreshCard(); });
 
@@ -230,10 +232,9 @@
       if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
         navigator.share({ files: [file], text, title: "COOL IT! Cool Moves" }).catch(() => {});
       } else if (navigator.share) {
-        navigator.share({ text, url: location.href.split("#")[0], title: "COOL IT! Cool Moves" }).catch(() => {});
+        navigator.share({ text, title: "COOL IT! Cool Moves" }).catch(() => FX.toast("💾", "Save the card to share it", "Press and hold (or right-click) the card to save the image."));
       } else {
-        $("btn-dl").click();
-        FX.toast("⬇️", "Card downloaded", "Share the image anywhere!");
+        FX.toast("💾", "Save the card to share it", "Press and hold (or right-click) the card to save the image.");
       }
     });
   });

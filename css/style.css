@@ -1,5 +1,6 @@
 /* COOL IT! — shared styles */
 :root {
+  color-scheme: dark;
   --bg: #070b1f;
   --bg-2: #0e1535;
   --panel: rgba(18, 26, 64, 0.72);
