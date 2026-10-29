@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Hear the Warming · COOL IT!</title>
+  <meta name="description" content="146 years of NASA global temperature data as warming stripes — and as music. One note per year." />
+  <meta name="theme-color" content="#070b1f" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎼</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/stripes.css" />
+</head>
+<body class="stripes-page">
+  <canvas id="cv" aria-label="Warming stripes: global temperature from 1880 to 2025"></canvas>
+
+  <header class="topbar">
+    <a class="brand" href="index.html"><span class="dot"></span>COOL IT!</a>
+    <div class="tb-right">
+      <button id="btn-line" class="chip" aria-pressed="false" title="Overlay the temperature line">📈 Temp line</button>
+      <button id="btn-co2" class="chip" aria-pressed="false" title="Overlay Mauna Loa CO₂">🫧 CO₂</button>
+      <button id="btn-mute" class="icon-btn" title="Sound" aria-label="Toggle sound">🔊</button>
+    </div>
+  </header>
+
+  <div id="readout" class="readout">
+    <div id="ro-year" class="ro-year">1880</div>
+    <div class="ro-row">
+      <span id="ro-temp" class="ro-temp">−0.0 °C</span>
+      <span id="ro-co2" class="ro-co2"></span>
+    </div>
+    <div id="ro-caption" class="ro-caption"></div>
+  </div>
+
+  <section id="intro" class="intro show">
+    <div class="intro-card">
+      <div class="kicker">NASA GISTEMP · 1880 → 2025</div>
+      <h1>Hear the <span>Warming</span></h1>
+      <p>Every stripe is one year of global temperature. Every note is one year too — the hotter the year, the higher the note.</p>
+      <p class="small">🎧 Turn your sound on. It takes about 15 seconds.</p>
+      <button id="btn-play" class="btn big">▶ Play 146 years</button>
+    </div>
+  </section>
+
+  <section id="outro" class="outro">
+    <div class="outro-card">
+      <p class="big-line">That high-pitched ending is the sound of <b>now</b>.</p>
+      <p>Drag across the stripes to explore any year. Then go do something about the next ones.</p>
+      <div class="row">
+        <button id="btn-replay" class="btn ghost">↻ Play again</button>
+        <a class="btn" href="play.html">🌍 Cool the planet</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/climate-data.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/fx.js"></script>
+  <script src="js/stripes.js"></script>
+</body>
+</html>
