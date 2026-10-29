@@ -1774,6 +1774,7 @@
   function startGame() {
     Sfx.unlock();
     S = newState("playing");
+    document.body.classList.remove("toasts-top");
     lastHud = {};
     scoreDirty = true;
     comboDirty = true;
@@ -1893,6 +1894,7 @@
     Array.from(starEls).forEach((s) => s.classList.remove("on"));
     $("stars").style.display = won ? "flex" : "none";
     FX.clearToasts();
+    document.body.classList.add("toasts-top");
     screen("screen-over");
     showHud(false);
 

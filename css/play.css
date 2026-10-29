@@ -343,3 +343,6 @@ body.play {
   .toast .t-icon { font-size: 1.2rem; }
   .stats { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* On the results screen, keep toasts out of the way of the buttons */
+body.toasts-top .toasts { top: max(12px, env(safe-area-inset-top)); bottom: auto; }
