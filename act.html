@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Cool Moves · COOL IT!</title>
+  <meta name="description" content="The real-life power-ups against global warming. Pick your moves, watch the tonnes add up, and make your pledge card." />
+  <meta name="theme-color" content="#070b1f" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💚</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/act.css" />
+</head>
+<body class="act">
+  <header class="topbar">
+    <a class="brand" href="index.html"><span class="dot"></span>COOL IT!</a>
+    <button id="btn-mute" class="icon-btn" title="Sound" aria-label="Toggle sound">🔊</button>
+  </header>
+
+  <main class="a-main">
+    <section class="a-hero">
+      <div class="kicker">Real-life power-ups</div>
+      <h1>Cool <span>Moves</span></h1>
+      <p>In the game you tapped smokestacks. Out here, these are the taps that count. Check the ones you'll do (or already do!) and watch your impact stack up.</p>
+    </section>
+
+    <div id="meter" class="meter panel">
+      <div class="m-left">
+        <div class="m-label">Your yearly impact</div>
+        <div class="m-num"><span id="tonnes">0.0</span><small> t CO₂e saved / year</small></div>
+        <div id="tier" class="m-tier">Pick your first move 👇</div>
+      </div>
+      <div class="m-right">
+        <div class="m-ripples"><span id="ripples">0</span><small>ripple moves</small></div>
+      </div>
+      <div class="m-bar"><div id="bar" class="m-fill"></div></div>
+    </div>
+
+    <h2 class="sec">🏋️ Heavy hitters <small>tonnes of CO₂e per person per year, in rich countries</small></h2>
+    <div id="list-big" class="moves"></div>
+
+    <h2 class="sec">🌊 Ripple moves <small>hard to measure in tonnes, huge in impact — they change what everyone else does</small></h2>
+    <div id="list-ripple" class="moves"></div>
+
+    <p class="note">Tonne estimates are typical savings per person per year in developed countries, from Wynes &amp; Nicholas, <i>Environmental Research Letters</i> (2017). Your real number depends on where and how you live.</p>
+
+    <section id="pledge" class="pledge panel">
+      <h2>Make your pledge card</h2>
+      <p>A shareable card with your moves. Post it, send it, stick it on the fridge.</p>
+      <div class="p-form">
+        <label class="sr-only" for="pname">Your name</label>
+        <input id="pname" type="text" maxlength="28" placeholder="Your name (optional)" autocomplete="given-name" />
+        <button id="btn-make" class="btn">✨ Make my card</button>
+      </div>
+      <div id="card-out" class="card-out">
+        <canvas id="pcard" width="1080" height="1350" aria-label="Your pledge card"></canvas>
+        <div class="row">
+          <a id="btn-dl" class="btn" download="my-cool-moves.png" href="#">⬇️ Download PNG</a>
+          <button id="btn-share" class="btn ghost">Share</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="a-foot row">
+      <a class="btn ghost" href="play.html">🌍 Play Planet Patrol</a>
+      <a class="btn ghost" href="quiz.html">🧠 Fact or Myth?</a>
+    </div>
+  </main>
+
+  <script src="js/climate-data.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/fx.js"></script>
+  <script src="js/act.js"></script>
+</body>
+</html>
