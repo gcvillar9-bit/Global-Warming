@@ -1,0 +1,14 @@
+{
+  "name": "COOL IT! · Global warming, but make it fun",
+  "short_name": "COOL IT!",
+  "description": "Slice CO₂, hear 146 years of warming, bust climate myths and find your real-life cool moves.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#070b1f",
+  "theme_color": "#070b1f",
+  "icons": [
+    { "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

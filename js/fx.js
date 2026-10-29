@@ -179,5 +179,10 @@
     try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
   }
 
+  /* ---------- Offline support (only works when served over http/https) ---------- */
+  if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol) && location.hostname !== "localhost") {
+    window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(() => {}); });
+  }
+
   window.FX = { confetti, toast, clearToasts, buzz, award, BADGES, loadBadges, visit, getStore, setStore };
 })();
