@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>COOL IT! · Global warming, but make it fun</title>
+  <meta name="description" content="A playful arcade about global warming: slice CO₂, hear 146 years of warming, bust climate myths, and find your real-life cool moves." />
+  <meta name="theme-color" content="#070b1f" />
+  <meta property="og:title" content="COOL IT! · Global warming, but make it fun" />
+  <meta property="og:description" content="Slice CO₂, flip smokestacks into wind turbines and keep the planet under 1.5 °C. Built on real NASA & NOAA data." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/home.css" />
+</head>
+<body class="home">
+  <canvas id="stripes-bg" aria-hidden="true"></canvas>
+  <div class="bg-fade" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="index.html"><span class="dot"></span>COOL IT!</a>
+    <button id="btn-mute" class="icon-btn" title="Sound" aria-label="Toggle sound">🔊</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-planet" id="hero-planet" aria-hidden="true">
+        <div class="hp-earth"><span class="hp-eye l"></span><span class="hp-eye r"></span><span class="hp-mouth"></span><span class="hp-sweat"></span></div>
+        <div class="hp-thermo"><span></span></div>
+      </div>
+      <p class="kicker">Global warming, but make it fun</p>
+      <h1 class="hero-title">COOL <span>IT!</span></h1>
+      <p class="hero-lead">Earth has a fever. The good news: we know the cure, and you can play it.</p>
+      <div class="hero-cta">
+        <a class="btn big" href="play.html">▶ Play Planet Patrol</a>
+        <a class="btn ghost" href="#modes">See everything</a>
+      </div>
+      <p class="stripes-note">The stripes behind this page are real: every bar is one year of global temperature, 1880 → 2025 (NASA). <a href="stripes.html">Hear them →</a></p>
+    </section>
+
+    <section class="counters" aria-label="Live counters">
+      <div class="counter bad">
+        <div class="c-top">🏭 Since you opened this page, humanity emitted</div>
+        <div class="c-num"><span id="ctr-co2">0</span> <small>tonnes of CO₂</small></div>
+        <div class="c-src">~37.4 billion tonnes a year from fossil fuels (Global Carbon Project 2024)</div>
+      </div>
+      <div class="counter good">
+        <div class="c-top">☀️ …and the world installed about</div>
+        <div class="c-num"><span id="ctr-solar">0</span> <small>solar panels</small></div>
+        <div class="c-src">~450 GW of new solar in 2024 (IRENA), assuming ~400 W per panel</div>
+      </div>
+    </section>
+
+    <section class="facts" aria-label="Key numbers">
+      <div class="fact"><b id="fact-2024">+1.50 °C</b><span>2024, the hottest year on record, vs. 1880–1900</span></div>
+      <div class="fact"><b>11 / 11</b><span>The 11 hottest years on record are the last 11 (2015–2025)</span></div>
+      <div class="fact"><b id="fact-co2">427 ppm</b><span>CO₂ in 2025 — up from ~280 before industry</span></div>
+      <div class="fact good"><b>~30%</b><span>Of the world's electricity already comes from renewables</span></div>
+    </section>
+
+    <section id="modes" class="modes">
+      <h2>Pick your mission</h2>
+      <div class="mode-grid">
+        <a class="mode m-play" href="play.html">
+          <div class="m-emoji">🌍</div>
+          <div class="m-body">
+            <h3>Planet Patrol</h3>
+            <p>Swipe CO₂ out of the sky. Flip smokestacks into wind turbines. Stop wildfires. Reach 2050 under +1.5&nbsp;°C.</p>
+            <span class="m-tag">Arcade · 4 min</span>
+          </div>
+        </a>
+        <a class="mode m-quiz" href="quiz.html">
+          <div class="m-emoji">🧠</div>
+          <div class="m-body">
+            <h3>Fact or Myth?</h3>
+            <p>Volcanoes, cows, wind turbines and birds — bust the myths, keep the streak alive.</p>
+            <span class="m-tag">Quiz · 2 min</span>
+          </div>
+        </a>
+        <a class="mode m-stripes" href="stripes.html">
+          <div class="m-emoji">🎼</div>
+          <div class="m-body">
+            <h3>Hear the Warming</h3>
+            <p>146 years of NASA temperature data, turned into colour and music. Turn your sound on.</p>
+            <span class="m-tag">Interactive · 1 min</span>
+          </div>
+        </a>
+        <a class="mode m-act" href="act.html">
+          <div class="m-emoji">💚</div>
+          <div class="m-body">
+            <h3>Cool Moves</h3>
+            <p>The real-life power-ups. Check off what you'll do, watch your tonnes add up, get your pledge card.</p>
+            <span class="m-tag">Action · 3 min</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="shelf" aria-labelledby="shelf-title">
+      <div class="shelf-head">
+        <h2 id="shelf-title">Your badges</h2>
+        <span id="badge-count" class="badge-count">0 / 0</span>
+      </div>
+      <div id="badges" class="badges"></div>
+    </section>
+
+    <section class="hope">
+      <h2>Why this isn't hopeless</h2>
+      <div class="hope-grid">
+        <div><b>🌞 Clean power is winning on price.</b> Most new solar and wind projects now produce electricity more cheaply than new fossil fuel plants (IRENA).</div>
+        <div><b>🛡️ We've fixed a sky problem before.</b> The 1987 Montreal Protocol banned ozone-eating chemicals. The ozone layer is on track to recover by around 2066 over Antarctica (UNEP/WMO 2023).</div>
+        <div><b>📉 Rich countries can cut and grow.</b> The UK roughly halved its territorial emissions since 1990 while its economy kept growing.</div>
+        <div><b>🌡️ Every bit counts.</b> Warming roughly stops when CO₂ emissions reach net zero. Every tenth of a degree we avoid means fewer extreme heatwaves (IPCC AR6).</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Built with real data: <a href="https://data.giss.nasa.gov/gistemp/" rel="noopener">NASA GISTEMP v4</a> · <a href="https://gml.noaa.gov/ccgg/trends/" rel="noopener">NOAA Mauna Loa CO₂</a>. Facts are cited where they appear.</p>
+    <p>No tracking, no ads, works offline. Made to make you feel something — then do something.</p>
+  </footer>
+
+  <script src="js/climate-data.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/fx.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>
