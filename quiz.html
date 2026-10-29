@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Fact or Myth? · COOL IT!</title>
+  <meta name="description" content="Swipe right for fact, left for myth. Bust the biggest global warming myths and keep your streak alive." />
+  <meta name="theme-color" content="#070b1f" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/quiz.css" />
+</head>
+<body class="quiz">
+  <header class="topbar">
+    <a class="brand" href="index.html"><span class="dot"></span>COOL IT!</a>
+    <button id="btn-mute" class="icon-btn" title="Sound" aria-label="Toggle sound">🔊</button>
+  </header>
+
+  <main class="q-main">
+    <div class="q-head">
+      <h1>Fact <span class="or">or</span> <span class="myth">Myth?</span></h1>
+      <div class="q-meta">
+        <div id="dots" class="dots" aria-label="Progress"></div>
+        <div class="q-score"><span id="streak" class="streak">🔥 0</span><span id="score" class="pts">0 pts</span></div>
+      </div>
+    </div>
+
+    <div id="stage" class="stage">
+      <div id="hint-left" class="hint left">❌ MYTH</div>
+      <div id="hint-right" class="hint right">FACT ✅</div>
+      <!-- cards go here -->
+    </div>
+
+    <div id="answer-row" class="answer-row">
+      <button id="btn-myth" class="btn hot answer">❌ Myth</button>
+      <button id="btn-fact" class="btn answer">✅ Fact</button>
+    </div>
+    <p id="swipe-tip" class="swipe-tip">Tip: swipe the card → for fact, ← for myth. Keys: ← →</p>
+
+    <section id="explain" class="explain" aria-live="polite">
+      <div id="verdict" class="verdict"></div>
+      <p id="why" class="why"></p>
+      <p id="src" class="src"></p>
+      <button id="btn-next" class="btn">Next →</button>
+    </section>
+
+    <section id="final" class="final">
+      <div class="final-card">
+        <div class="kicker">Round complete</div>
+        <div id="final-emoji" class="final-emoji">🧠</div>
+        <h2 id="final-title">Climate Brain</h2>
+        <div class="final-score"><span id="final-right">0</span><small>/10</small></div>
+        <p id="final-msg" class="final-msg"></p>
+        <div class="row">
+          <button id="btn-again" class="btn">New round ↻</button>
+          <a class="btn ghost" href="play.html">🌍 Play Planet Patrol</a>
+        </div>
+        <p class="more"><a href="stripes.html">🎼 Hear the warming</a> · <a href="act.html">💚 Cool moves</a></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/audio.js"></script>
+  <script src="js/fx.js"></script>
+  <script src="js/quiz.js"></script>
+</body>
+</html>
