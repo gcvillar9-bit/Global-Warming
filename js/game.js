@@ -362,7 +362,9 @@
     S.parts.push({ x, y, vx: 0, vy: 0, life: 0.45, max: 0.45, size: size || ITEM, color, shape: "ring", grav: 0, drag: 0, rot: 0, vr: 0, grow: 0 });
   }
   function floatText(x, y, text, color, size) {
-    S.floats.push({ x, y, text, color: color || "#fff", size: size || 18, life: 1.1, max: 1.1 });
+    const f = { x, y, text, color: color || "#fff", size: size || 18, life: 1.1, max: 1.1 };
+    S.floats.push(f);
+    return f;
   }
 
   /* ------------------------------------------------------------------ */
@@ -550,7 +552,7 @@
     for (const m of S.mols) {
       if (m.state !== "live") continue;
       molPos(m);
-      if (distToSeg(m.x, m.y, x0, y0, x1, y1) < MOL_R * 1.9 + 8) { captureMolecule(m); hit = true; }
+      if (distToSeg(m.x, m.y, x0, y0, x1, y1) < MOL_R * 1.9 + 8) { captureMolecule(m); hit = true; swipeHits++; multiSlice(m.x, m.y); }
     }
     for (let i = 0; i < SLOTS; i++) {
       const sl = S.slots[i];
@@ -570,9 +572,27 @@
     return hit;
   }
 
+  // Several molecules in one swipe = a multi-slice bonus.
+  let swipeHits = 0, swipeBest = 0, multiFloat = null;
+  const MULTI = { 3: "TRIPLE SLICE!", 5: "MEGA SLICE!", 8: "ULTRA SLICE!", 12: "CARBON CRUSHER!" };
+  function multiSlice(x, y) {
+    const label = MULTI[swipeHits];
+    if (!label || swipeHits <= swipeBest) return;
+    swipeBest = swipeHits;
+    if (multiFloat) multiFloat.life = 0;
+    multiFloat = floatText(x, y - 34, label, swipeHits >= 8 ? "#d6b8ff" : "#ffd23f", 22 + Math.min(swipeHits, 12));
+    addScore(25 * swipeHits, x, y - 8, "#ffd23f");
+    Sfx.sparkle();
+    S.joy = Math.max(S.joy, 0.9);
+    if (swipeHits >= 5) S.shake = Math.max(S.shake, 4);
+  }
+
   function onDown(e) {
     Sfx.unlock();
     if (!S || S.phase !== "playing") return;
+    swipeHits = 0;
+    swipeBest = 0;
+    multiFloat = null;
     pointerDown = true;
     const x = e.clientX, y = e.clientY;
     last = { x, y };

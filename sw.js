@@ -1,6 +1,6 @@
 /* COOL IT! — offline support. Same-origin files are cached on install and served cache-first;
  * Google Fonts are cached as they're fetched. Bump VERSION when files change. */
-const VERSION = "coolit-v1";
+const VERSION = "coolit-v2";
 const CORE = [
   "./", "index.html", "play.html", "quiz.html", "stripes.html", "act.html",
   "css/style.css", "css/home.css", "css/play.css", "css/quiz.css", "css/stripes.css", "css/act.css",
